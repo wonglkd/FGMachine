@@ -225,6 +225,8 @@ app.post("/projects/:id", jsonParser, (req, res) => {
       args.push(options[prop]);
     } else if (project.options === "double-dash") {
       args.push("--" + prop + "=" + options[prop]);
+    } else if (project.options == "key-value") {
+      args.push('"' + prop + "=" + options[prop] + '"');
     } else if (project.options === "function") {
       functionParams.push(JSON.stringify(prop));
       functionParams.push(JSON.stringify(options[prop]));
