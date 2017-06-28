@@ -60,8 +60,7 @@ fs.readFile("specs.json", "utf-8")
   // GPU models
   if (os.platform() === "linux") {
     var lspci = spawnSync("lspci", []);
-    var grep_vga = spawnSync("grep", ["-i", "vga"], {input: lspci.stdout});
-    var grep = spawnSync("grep", ["-i", "nvidia"], {input: grep_vga.stdout});
+    var grep = spawnSync("grep", ["-i", "nvidia"], {input: lspci.stdout});
     var gpuStrings = grep.stdout.toString().split("\n");
     for (var i = 0; i < gpuStrings.length - 1; i++) {
       specs.gpus.push(gpuStrings[i].replace(/.*controller: /g, ""));
