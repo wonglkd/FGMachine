@@ -225,7 +225,7 @@ app.post("/projects/:id", jsonParser, (req, res) => {
     } else if (project.options === "double-dash") {
       args.push("--" + prop + "=" + options[prop]);
     } else if (project.options == "key-value") {
-      args.push("\"" + prop + "=" + options[prop] + "\"");
+      args.push(prop + "=" + options[prop]);
     } else if (project.options === "function") {
       functionParams.push(JSON.stringify(prop));
       functionParams.push(JSON.stringify(options[prop]));
@@ -292,6 +292,7 @@ app.post("/projects/:id", jsonParser, (req, res) => {
   }
   
   // Spawn experiment
+  console.log("Running: " + project.command + " " + args);
   var experiment = spawn(project.command, args, {cwd: project.cwd})
   // Catch spawning errors
   .on("error", () => {
@@ -299,7 +300,7 @@ app.post("/projects/:id", jsonParser, (req, res) => {
     rp({uri: process.env.FGLAB_URL + "/api/v1/experiments/" + experimentId, method: "PUT", json: {_status: "fail"}, gzip: true});
     // Log error
     console.log("Error: Experiment could not start - please check projects.json");
-	  console.log("Command: " + project.command + " " + args.join(" "));
+    console.log("Command: " + project.command + " " + args);
   });
   
   maxCapacity = Math.max(maxCapacity - project.capacity, 0); // Reduce capacity of machine
